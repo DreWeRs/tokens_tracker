@@ -1,6 +1,6 @@
 line-length = 88
 
-[tool.ruff.lint]
+[lint]
 select = ['ALL']
 ignore = [
   'D100',
