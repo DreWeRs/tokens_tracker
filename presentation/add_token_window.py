@@ -14,4 +14,5 @@ class AddTokenWindow(QDialog):
         self.buttonBox.rejected.connect(self.close)
 
     def execute(self):
-        ...  # Нужно доделать
+        connection = self.session_maker.create_connection()
+
