@@ -1,21 +1,24 @@
 from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
 
+from infrastructure.db.db_setup import SQLiteSessionMaker
+from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
 from presentation.add_token_window import AddTokenWindow
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, table: list[list]) -> None:
+    def __init__(self,table: list[list], session_maker: SQLiteSessionMaker) -> None:
         super().__init__()
 
+        self.session_maker = session_maker
         self.table = table
         self.header_labels = [
-            "Токен", "Цена покупки", "Изменение цены", "Текущая цена", "Дата добавления",
+            "Токен", "Количество", "Цена покупки", "Изменение цены", "Текущая цена", "Дата добавления", "Биржа"
         ]
 
         uic.loadUi("resources/main_window.ui", self)
         self.pushButton.clicked.connect(self.add_token)
-        self.pushButton_2.clicked.connect(self.fill_table)  # temporary solve
+        self.pushButton_2.clicked.connect(self.fill_table)
 
     def fill_table(self) -> None:
         self.tableWidget.setSortingEnabled(True)
@@ -29,5 +32,5 @@ class MainWindow(QMainWindow):
                 self.tableWidget.setItem(r, c, item)
 
     def add_token(self) -> None:
-        self.add_token_window = AddTokenWindow()
+        self.add_token_window = AddTokenWindow(self.session_maker)
         self.add_token_window.show()
