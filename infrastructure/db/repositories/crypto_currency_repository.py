@@ -16,32 +16,22 @@ class CryptoCurrencyRepository:
     def write_new_currency(self, crypto_currency: dict) -> None:  # Вот тут надо переделать, скорее всего вместо
         # аргумента-словаря будет аргумент-объект
         query = '''
-        INSERT INTO tokens (name, amount, buy_price, difference, current_price, date, market) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO tokens (name, amount, buy_price, date, market) 
+        VALUES (?, ?, ?, ?, ?)
         '''
         params = (crypto_currency['name'],
                   crypto_currency['amount'],
                   crypto_currency['buy_price'],
-                  crypto_currency['difference'],
-                  crypto_currency['current_price'],
                   crypto_currency['date'],
                   crypto_currency['market']
                   )
 
         self.cursor.execute(query, params)
 
-    def change_price_fields(self, table: list[list]) -> None:
-        query = '''UPDATE tokens SET buy_price=?, difference=?, current_price=?'''
-        for _ in range(len(table)):
-            params = (table[3], table[4])
-            self.cursor.execute(query, params)
-
     def edit_currency(self, crypto_currency: dict) -> None:
-        query = '''UPDATE tokens SET amount=?, buy_price=?, difference=?, current_price=?, date=?, market=?'''
+        query = '''UPDATE tokens SET amount=?, buy_price=?, date=?, market=?'''
         params = (crypto_currency['amount'],
                   crypto_currency['buy_price'],
-                  crypto_currency['difference'],
-                  crypto_currency['current_price'],
                   crypto_currency['date'],
                   crypto_currency['market']
                   )

@@ -17,9 +17,13 @@ class CryptoCurrencyGetter:
         data = response.json()["data"]
 
         if not data:
-            raise ValueError("Ошибка доступа к онлайн-сервисам")
+            raise AttributeError("Ошибка доступа к онлайн-сервисам")
 
         return data
+
+    def get_currencies_names(self, data: list[dict[str: Any]]) -> list[str]:
+        currency_names = [elem['symbol'] for elem in data]
+        return currency_names
 
 
 def get_desired_currencies_price(
