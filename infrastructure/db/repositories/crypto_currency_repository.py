@@ -29,11 +29,14 @@ class CryptoCurrencyRepository:
         self.cursor.execute(query, params)
 
     def edit_currency(self, crypto_currency: dict) -> None:
-        query = '''UPDATE tokens SET amount=?, buy_price=?, date=?, market=?'''
+        query = '''UPDATE tokens SET amount=?, buy_price=?, date=?, market=?
+        WHERE name = ?
+        '''
         params = (crypto_currency['amount'],
                   crypto_currency['buy_price'],
                   crypto_currency['date'],
-                  crypto_currency['market']
+                  crypto_currency['market'],
+                  crypto_currency['name']
                   )
 
         self.cursor.execute(query, params)
