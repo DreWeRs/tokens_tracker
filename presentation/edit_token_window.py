@@ -14,16 +14,19 @@ class EditTokenWindow(QDialog):
         self.token = token
         self.session_maker = session_maker
 
+        self.date_state = True
+        self.initUI()
+
+    def initUI(self):
         self.buttonBox.accepted.connect(self.execute)
         self.buttonBox.rejected.connect(self.close)
 
-        self.date_state = True
         self.dateMarkBox.stateChanged.connect(self.date_mark_changed)
         self.dateEdit.setDate(QDate(*get_date()))
 
-        self.priceSpinBox.setValue(token[2])
-        self.amountBox.setValue(token[1])
-        self.marketLine.setText(token[-1])
+        self.priceSpinBox.setValue(self.token[2])
+        self.amountBox.setValue(self.token[1])
+        self.marketLine.setText(self.token[-1])
 
     def execute(self):
         connection = self.session_maker.create_connection()

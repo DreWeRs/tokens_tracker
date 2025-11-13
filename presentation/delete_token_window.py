@@ -12,10 +12,12 @@ class DeleteTokenWindow(QDialog):
         uic.loadUi("resources/delete_token_window.ui", self)
         self.token = token
         self.session_maker = session_maker
+        self.initUI()
 
+    def initUI(self):
         pixmap = QPixmap("resources/icons/delete_picture.png").scaled(151, 151)
         self.imageLabel.setPixmap(pixmap)
-        self.msgLabel.setText(f'Вы хотите удалить: {token[0]}?')
+        self.msgLabel.setText(f'Вы хотите удалить: {self.token[0]}?')
 
         self.buttonBox.accepted.connect(self.execute)
         self.buttonBox.rejected.connect(self.close)

@@ -14,16 +14,19 @@ class AddTokenWindow(QDialog):
         self.prices = prices
         self.session_maker = session_maker
 
-        self.buttonBox.accepted.connect(self.execute)
-        self.buttonBox.rejected.connect(self.close)
-
         self.price_state = False
         self.date_state = True
-        self.realPriceBox.stateChanged.connect(self.price_mark_changed)
-        self.dateMarkBox.stateChanged.connect(self.date_mark_changed)
         for key in self.prices.keys():
             self.chooseBox.addItem(key, userData=str(self.prices[key]))
         self.dateEdit.setDate(QDate(*get_date()))
+        self.initUI()
+
+    def initUI(self):
+        self.buttonBox.accepted.connect(self.execute)
+        self.buttonBox.rejected.connect(self.close)
+
+        self.realPriceBox.stateChanged.connect(self.price_mark_changed)
+        self.dateMarkBox.stateChanged.connect(self.date_mark_changed)
 
     def execute(self) -> None:
         connection = self.session_maker.create_connection()
