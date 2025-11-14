@@ -1,0 +1,233 @@
+/* Основные цвета */
+* {
+    background-color: white;
+    color: #2c3e50;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 12px;
+    border: none;
+}
+
+/* QPushButton */
+QPushButton {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 16px;
+    font-weight: bold;
+    min-height: 20px;
+    min-width: 80px;
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QPushButton:pressed {
+    background-color: #21618c;
+}
+
+QPushButton:disabled {
+    background-color: #bdc3c7;
+    color: #7f8c8d;
+}
+
+/* QLabel */
+QLabel {
+    background-color: transparent;
+    color: #2c3e50;
+    padding: 4px;
+}
+
+QLabel:disabled {
+    color: #95a5a6;
+}
+
+/* QTableWidget */
+QTableWidget {
+    background-color: white;
+    gridline-color: #ecf0f1;
+    selection-background-color: #3498db;
+    selection-color: white;
+    border: 1px solid #bdc3c7;
+}
+
+QTableWidget::item {
+    padding: 6px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+QTableWidget::item:selected {
+    background-color: #3498db;
+    color: white;
+}
+
+QHeaderView::section {
+    background-color: #3498db;
+    color: white;
+    padding: 8px;
+    border: none;
+    font-weight: bold;
+}
+
+/* QMenuBar */
+QMenuBar {
+    background-color: white;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 8px 16px;
+    color: #2c3e50;
+}
+
+QMenuBar::item:selected {
+    background-color: #3498db;
+    color: white;
+}
+
+QMenuBar::item:pressed {
+    background-color: #2980b9;
+}
+
+/* QMenu */
+QMenu {
+    background-color: white;
+    border: 1px solid #bdc3c7;
+}
+
+QMenu::item {
+    background-color: transparent;
+    padding: 8px 24px;
+    color: #2c3e50;
+}
+
+QMenu::item:selected {
+    background-color: #3498db;
+    color: white;
+}
+
+QMenu::item:disabled {
+    color: #95a5a6;
+}
+
+/* QDialog */
+QDialog {
+    background-color: white;
+}
+
+/* QDateEdit */
+QDateEdit {
+    background-color: white;
+    border: 1px solid #bdc3c7;
+    padding: 6px;
+    min-height: 20px;
+}
+
+QDateEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QDateEdit::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #bdc3c7;
+}
+
+QDateEdit::down-arrow {
+    image: none;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #2c3e50;
+}
+
+/* QLineEdit */
+QLineEdit {
+    background-color: white;
+    border: 1px solid #bdc3c7;
+    padding: 6px;
+    min-height: 20px;
+}
+
+QLineEdit:hover {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:focus {
+    border: 1px solid #3498db;
+}
+
+QLineEdit:disabled {
+    background-color: #ecf0f1;
+    color: #95a5a6;
+}
+
+/* QDoubleSpinBox */
+QDoubleSpinBox {
+    background-color: white;
+    border: 1px solid #bdc3c7;
+    padding: 6px;
+    min-height: 20px;
+}
+
+QDoubleSpinBox:hover {
+    border: 1px solid #3498db;
+}
+
+QDoubleSpinBox:focus {
+    border: 1px solid #3498db;
+}
+
+QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {
+    background-color: #3498db;
+    width: 16px;
+    border: none;
+}
+
+QDoubleSpinBox::up-button:hover, QDoubleSpinBox::down-button:hover {
+    background-color: #2980b9;
+}
+
+QDoubleSpinBox::up-arrow, QDoubleSpinBox::down-arrow {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+}
+
+QDoubleSpinBox::up-arrow {
+    border-bottom: 4px solid white;
+}
+
+QDoubleSpinBox::down-arrow {
+    border-top: 4px solid white;
+}
+
+/* Scrollbars */
+QScrollBar:vertical {
+    background-color: #ecf0f1;
+    width: 12px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #3498db;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #2980b9;
+}
+
+QScrollBar:horizontal {
+    background-color: #ecf0f1;
+    height: 12px;
+}
+
+QScrollBar::handle:horizontal {
+    background-color: #3498db;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background-color: #2980b9;
+}

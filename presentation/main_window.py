@@ -129,4 +129,3 @@ class MainWindow(QMainWindow):
 
         connection.commit()
         connection.close()
-
