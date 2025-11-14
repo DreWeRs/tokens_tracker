@@ -1,6 +1,8 @@
+import csv
+
 from PyQt6 import uic
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
+from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QFileDialog
 
 from application.actualize_table import actualize_table
 from application.get_crypto_currency import CryptoCurrencyGetter, get_desired_currencies_price
@@ -97,7 +99,23 @@ class MainWindow(QMainWindow):
             self.fill_table()
 
     def upload_to_csv(self) -> None:
-        ...  # :) ты знаешь что это значит)))))
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Сохранить как CSV",
+            "",
+            "CSV Files (*.csv);;All Files (*)"
+        )
+
+        with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file, delimiter=',')
+            writer.writerow(self.header_labels)
+            for r in range(len(self.table)):
+                row = []
+                for c in range(len(self.table[r])):
+                    item = self.table[r][c]
+                    row.append(item)
+
+                writer.writerow(row)
 
     def display_graph(self) -> None:
         self.graph_window = GraphWindow(self.session_maker)
