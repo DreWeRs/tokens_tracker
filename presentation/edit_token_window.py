@@ -1,6 +1,7 @@
 from PyQt6 import uic
 from PyQt6.QtCore import QDate
-from PyQt6.QtWidgets import QDialog, QMessageBox
+from PyQt6.QtGui import QIcon
+from PyQt6.QtWidgets import QDialog
 
 from application.get_date import get_date
 from infrastructure.db.db_setup import SQLiteSessionMaker
@@ -18,6 +19,8 @@ class EditTokenWindow(QDialog):
         self.initUI()
 
     def initUI(self):
+        self.setWindowTitle('Редактирование токена')
+        self.setWindowIcon(QIcon('resources/icons/bill_icon.png'))
         self.buttonBox.accepted.connect(self.execute)
         self.buttonBox.rejected.connect(self.close)
 
@@ -32,23 +35,12 @@ class EditTokenWindow(QDialog):
         connection = self.session_maker.create_connection()
         cursor = connection.cursor()
 
-        crypto_currency = {'name': self.token[0]}
-        try:
-            crypto_currency['buy_price'] = float(self.priceSpinBox.value())
-        except TypeError:
-            msg = QMessageBox()  # Срочно переделать сделав месадж бокс объектом
-            msg.setText('Неверная цена')
-            msg.setInformativeText('Цена должна быть числом')
-            msg.exec()
-        crypto_currency['date'] = str(self.dateEdit.text())
-        try:
-            crypto_currency['amount'] = float(self.amountBox.value())
-        except TypeError:
-            msg = QMessageBox()  # Срочно переделать сделав месадж бокс объектом
-            msg.setText('Неверное количество')
-            msg.setInformativeText('Количество должно быть числом')
-            msg.exec()
-        crypto_currency['market'] = self.marketLine.text()
+        crypto_currency = {'name': self.token[0],
+                           'buy_price': float(self.priceSpinBox.value()),
+                           'date': str(self.dateEdit.text()),
+                           'amount': float(self.amountBox.value()),
+                           'market': self.marketLine.text()
+                           }
 
         CryptoCurrencyRepository(cursor=cursor).edit_currency(crypto_currency)
         connection.commit()

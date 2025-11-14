@@ -1,12 +1,11 @@
-import csv
-
 from PyQt6 import uic
-from PyQt6.QtGui import QAction
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QFileDialog
 
 from application.actualize_table import actualize_table
 from application.get_crypto_currency import CryptoCurrencyGetter, get_desired_currencies_price
 from application.get_date import get_date
+from application.write_to_csv import write_to_csv
 from infrastructure.db.db_setup import SQLiteSessionMaker
 from infrastructure.db.repositories.balance_logs_repository import BalanceLogsRepository
 from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
@@ -37,6 +36,8 @@ class MainWindow(QMainWindow):
         self.pushButton_2.clicked.connect(self.edit_token)
         self.pushButton_3.clicked.connect(self.delete_token)
 
+        self.setWindowTitle('Tokens tracker')
+        self.setWindowIcon(QIcon('resources/icons/app_icon.png'))
         menu = self.menuBar()
 
         file_menu = menu.addMenu('Файл')
@@ -105,21 +106,14 @@ class MainWindow(QMainWindow):
             "",
             "CSV Files (*.csv);;All Files (*)"
         )
-
-        with open(file_path, 'w', newline='', encoding='utf-8') as csv_file:
-            writer = csv.writer(csv_file, delimiter=',')
-            writer.writerow(self.header_labels)
-            for r in range(len(self.table)):
-                row = []
-                for c in range(len(self.table[r])):
-                    item = self.table[r][c]
-                    row.append(item)
-
-                writer.writerow(row)
+        write_to_csv(file_path, self.header_labels, self.table)
 
     def display_graph(self) -> None:
         self.graph_window = GraphWindow(self.session_maker)
+        self.hide()
+        self.graph_window.setGeometry(self.geometry())
         self.graph_window.show()
+        self.graph_window.closed.connect(self.show)
 
     def logging(self) -> None:
         connection = self.session_maker.create_connection()
@@ -135,3 +129,4 @@ class MainWindow(QMainWindow):
 
         connection.commit()
         connection.close()
+

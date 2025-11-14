@@ -1,7 +1,9 @@
 from datetime import datetime
 
 import pyqtgraph
-from PyQt6 import uic, QtCore
+from PyQt6 import QtCore
+from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget, QVBoxLayout
 
 from infrastructure.db.db_setup import SQLiteSessionMaker
@@ -9,9 +11,14 @@ from infrastructure.db.repositories.balance_logs_repository import BalanceLogsRe
 
 
 class GraphWindow(QWidget):
+    closed = pyqtSignal()
+
     def __init__(self, session_maker: SQLiteSessionMaker) -> None:
         super().__init__()
         self.session_maker = session_maker
+
+        self.setWindowTitle('График баланса')
+        self.setWindowIcon(QIcon('resources/icons/icon_chartup.png'))
 
         layout = QVBoxLayout(self)
         self.graphWidget = pyqtgraph.PlotWidget(axisItems={'bottom': pyqtgraph.DateAxisItem()})
@@ -48,3 +55,7 @@ class GraphWindow(QWidget):
             text = pyqtgraph.TextItem(f"{balance} $\n{date}", color='k', anchor=(0.5, 1.5))
             self.graphWidget.addItem(text)
             text.setPos(timestamp, balance)
+
+    def closeEvent(self, event):
+        self.closed.emit()
+        event.accept()
