@@ -15,6 +15,7 @@ def main() -> None:
 
     app = QApplication(sys.argv)
     ex = MainWindow(session_maker, crypto_getter)
+    ex.logging()
     ex.fill_table()
     ex.show()
     sys.exit(app.exec())

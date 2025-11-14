@@ -1,13 +1,18 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem
+from PyQt6.QtGui import QAction, QIcon
+from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QFileDialog
 
 from application.actualize_table import actualize_table
 from application.get_crypto_currency import CryptoCurrencyGetter, get_desired_currencies_price
+from application.get_date import get_date
+from application.write_to_csv import write_to_csv
 from infrastructure.db.db_setup import SQLiteSessionMaker
+from infrastructure.db.repositories.balance_logs_repository import BalanceLogsRepository
 from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
 from presentation.add_token_window import AddTokenWindow
 from presentation.delete_token_window import DeleteTokenWindow
 from presentation.edit_token_window import EditTokenWindow
+from presentation.graph_window import GraphWindow
 
 
 class MainWindow(QMainWindow):
@@ -24,10 +29,26 @@ class MainWindow(QMainWindow):
         self.header_labels = [
             "Токен", "Количество", "Цена покупки", "Изменение цены", "Текущая цена", "Дата добавления", "Биржа"
         ]
+        self.initUI()
 
+    def initUI(self):
         self.pushButton.clicked.connect(self.add_token)
         self.pushButton_2.clicked.connect(self.edit_token)
         self.pushButton_3.clicked.connect(self.delete_token)
+
+        self.setWindowTitle('Tokens tracker')
+        self.setWindowIcon(QIcon('resources/icons/app_icon.png'))
+        menu = self.menuBar()
+
+        file_menu = menu.addMenu('Файл')
+        save_action = QAction('Выгрузить в CSV-файл', self)
+        save_action.triggered.connect(self.upload_to_csv)
+        file_menu.addAction(save_action)
+
+        data_menu = menu.addMenu('Данные')
+        graph_action = QAction('График изменения баланса', self)
+        graph_action.triggered.connect(self.display_graph)
+        data_menu.addAction(graph_action)
 
     def refresh_window(self) -> None:
         connection = self.session_maker.create_connection()
@@ -38,7 +59,7 @@ class MainWindow(QMainWindow):
         previous_table = [list(elem)[1:] for elem in previous_table]
         self.table = actualize_table(previous_table, self.crypto_getter)
 
-        all_tokens_sum = sum([x[4] for x in self.table])
+        all_tokens_sum = sum([x[4] * x[1] for x in self.table])
         buy_sum = sum([x[2] for x in self.table])
         self.sumLabel.setText(f'Общая сумма: {all_tokens_sum:.4f}$')
         self.difLabel.setText(f'Изменение баланса: {((all_tokens_sum - buy_sum) / buy_sum * 100):.4f}%')
@@ -77,3 +98,35 @@ class MainWindow(QMainWindow):
             self.delete_token_window.exec()
             self.refresh_window()
             self.fill_table()
+
+    def upload_to_csv(self) -> None:
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Сохранить как CSV",
+            "",
+            "CSV Files (*.csv);;All Files (*)"
+        )
+        write_to_csv(file_path, self.header_labels, self.table)
+
+    def display_graph(self) -> None:
+        self.graph_window = GraphWindow(self.session_maker)
+        self.hide()
+        self.graph_window.setGeometry(self.geometry())
+        self.graph_window.show()
+        self.graph_window.closed.connect(self.show)
+
+    def logging(self) -> None:
+        connection = self.session_maker.create_connection()
+        cursor = connection.cursor()
+
+        balance = self.sumLabel.text().split()[-1][:-1]
+        raw_date = get_date()
+        date = '.'.join([str(x) for x in raw_date])
+
+        logs_repository = BalanceLogsRepository(cursor=cursor)
+        if logs_repository.check_unique_log(date):
+            logs_repository.write_new_balance(float(balance), date)
+
+        connection.commit()
+        connection.close()
+
