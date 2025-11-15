@@ -62,12 +62,17 @@ class MainWindow(QMainWindow):
         connection.close()
 
         previous_table = [list(elem)[1:] for elem in previous_table]
-        self.table = actualize_table(previous_table, self.crypto_getter)
-
-        all_tokens_sum = sum([x[4] * x[1] for x in self.table])
-        buy_sum = sum([x[2] for x in self.table])
-        self.sumLabel.setText(f"Общая сумма: {all_tokens_sum:.4f}$")
-        self.difLabel.setText(f"Изменение баланса: {((all_tokens_sum - buy_sum) / buy_sum * 100):.4f}%")
+        if previous_table:
+            self.table = actualize_table(previous_table, self.crypto_getter)
+            all_tokens_sum = sum([x[4] * x[1] for x in self.table])
+            buy_sum = sum([x[2] * x[1] for x in self.table])
+            self.sumLabel.setText(f"Общая сумма: {all_tokens_sum:.4f}$")
+            self.difLabel.setText(f"Изменение баланса: {((all_tokens_sum - buy_sum) / buy_sum * 100):.4f}%")
+        else:
+            self.table = [[]]
+            self.tableWidget.clear()
+            self.sumLabel.setText(f"Общая сумма: 0$")
+            self.difLabel.setText(f"Изменение баланса: 0%")
 
     def fill_table(self) -> None:
         self.tableWidget.setSortingEnabled(True)
@@ -90,19 +95,21 @@ class MainWindow(QMainWindow):
         row = self.tableWidget.currentRow()
         if row >= 0:
             token = self.table[row]
-            self.edit_token_window = EditTokenWindow(token, self.session_maker)
-            self.edit_token_window.exec()
-            self.refresh_window()
-            self.fill_table()
+            if token:
+                self.edit_token_window = EditTokenWindow(token, self.session_maker)
+                self.edit_token_window.exec()
+                self.refresh_window()
+                self.fill_table()
 
     def delete_token(self) -> None:
         row = self.tableWidget.currentRow()
         if row >= 0:
             token = self.table[row]
-            self.delete_token_window = DeleteTokenWindow(token, self.session_maker)
-            self.delete_token_window.exec()
-            self.refresh_window()
-            self.fill_table()
+            if token:
+                self.delete_token_window = DeleteTokenWindow(token, self.session_maker)
+                self.delete_token_window.exec()
+                self.refresh_window()
+                self.fill_table()
 
     def upload_to_csv(self) -> None:
         file_path, _ = QFileDialog.getSaveFileName(
