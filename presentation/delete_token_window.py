@@ -20,7 +20,7 @@ class DeleteTokenWindow(QDialog):
         self.setWindowTitle("Удаление токена")
         self.setWindowIcon(QIcon("resources/icons/warning_picture.png"))
 
-        pixmap = QPixmap("resources/icons/delete_picture.png").scaled(151, 151)
+        pixmap = QPixmap("resources/icons/delete_picture.png").scaled(140, 140)
         self.imageLabel.setPixmap(pixmap)
         self.msgLabel.setText(f"Вы хотите удалить: {self.token[0]}?")
 
