@@ -22,7 +22,7 @@ class CryptoCurrencyGetter:
         return data
 
     def get_currencies_names(self, data: list[dict[str: Any]]) -> list[str]:
-        currency_names = [elem['symbol'] for elem in data]
+        currency_names = [elem["symbol"] for elem in data]
         return currency_names
 
 
