@@ -1,14 +1,19 @@
 from PyQt6 import uic
 from PyQt6.QtGui import QAction, QIcon
-from PyQt6.QtWidgets import QMainWindow, QTableWidgetItem, QFileDialog
+from PyQt6.QtWidgets import QFileDialog, QMainWindow, QTableWidgetItem
 
 from application.actualize_table import actualize_table
-from application.get_crypto_currency import CryptoCurrencyGetter, get_desired_currencies_price
+from application.get_crypto_currency import (
+    CryptoCurrencyGetter,
+    get_desired_currencies_price,
+)
 from application.get_date import get_date
 from application.write_to_csv import write_to_csv
 from infrastructure.db.db_setup import SQLiteSessionMaker
 from infrastructure.db.repositories.balance_logs_repository import BalanceLogsRepository
-from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
+from infrastructure.db.repositories.crypto_currency_repository import (
+    CryptoCurrencyRepository,
+)
 from presentation.add_token_window import AddTokenWindow
 from presentation.delete_token_window import DeleteTokenWindow
 from presentation.edit_token_window import EditTokenWindow
@@ -27,7 +32,7 @@ class MainWindow(QMainWindow):
         self.names = crypto_getter.get_currencies_names(self.data)
         self.prices = get_desired_currencies_price(self.data, self.names)
         self.header_labels = [
-            "Токен", "Количество", "Цена покупки", "Изменение цены", "Текущая цена", "Дата добавления", "Биржа"
+            "Токен", "Количество", "Цена покупки", "Изменение цены", "Текущая цена", "Дата добавления", "Биржа",
         ]
         self.initUI()
 
@@ -36,17 +41,17 @@ class MainWindow(QMainWindow):
         self.pushButton_2.clicked.connect(self.edit_token)
         self.pushButton_3.clicked.connect(self.delete_token)
 
-        self.setWindowTitle('Tokens tracker')
-        self.setWindowIcon(QIcon('resources/icons/app_icon.png'))
+        self.setWindowTitle("Tokens tracker")
+        self.setWindowIcon(QIcon("resources/icons/app_icon.png"))
         menu = self.menuBar()
 
-        file_menu = menu.addMenu('Файл')
-        save_action = QAction('Выгрузить в CSV-файл', self)
+        file_menu = menu.addMenu("Файл")
+        save_action = QAction("Выгрузить в CSV-файл", self)
         save_action.triggered.connect(self.upload_to_csv)
         file_menu.addAction(save_action)
 
-        data_menu = menu.addMenu('Данные')
-        graph_action = QAction('График изменения баланса', self)
+        data_menu = menu.addMenu("Данные")
+        graph_action = QAction("График изменения баланса", self)
         graph_action.triggered.connect(self.display_graph)
         data_menu.addAction(graph_action)
 
@@ -61,8 +66,8 @@ class MainWindow(QMainWindow):
 
         all_tokens_sum = sum([x[4] * x[1] for x in self.table])
         buy_sum = sum([x[2] for x in self.table])
-        self.sumLabel.setText(f'Общая сумма: {all_tokens_sum:.4f}$')
-        self.difLabel.setText(f'Изменение баланса: {((all_tokens_sum - buy_sum) / buy_sum * 100):.4f}%')
+        self.sumLabel.setText(f"Общая сумма: {all_tokens_sum:.4f}$")
+        self.difLabel.setText(f"Изменение баланса: {((all_tokens_sum - buy_sum) / buy_sum * 100):.4f}%")
 
     def fill_table(self) -> None:
         self.tableWidget.setSortingEnabled(True)
@@ -104,7 +109,7 @@ class MainWindow(QMainWindow):
             self,
             "Сохранить как CSV",
             "",
-            "CSV Files (*.csv);;All Files (*)"
+            "CSV Files (*.csv);;All Files (*)",
         )
         write_to_csv(file_path, self.header_labels, self.table)
 
@@ -121,7 +126,7 @@ class MainWindow(QMainWindow):
 
         balance = self.sumLabel.text().split()[-1][:-1]
         raw_date = get_date()
-        date = '.'.join([str(x) for x in raw_date])
+        date = ".".join([str(x) for x in raw_date])
 
         logs_repository = BalanceLogsRepository(cursor=cursor)
         if logs_repository.check_unique_log(date):

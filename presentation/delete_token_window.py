@@ -1,9 +1,11 @@
 from PyQt6 import uic
+from PyQt6.QtGui import QIcon, QPixmap
 from PyQt6.QtWidgets import QDialog
-from PyQt6.QtGui import QPixmap, QIcon
 
 from infrastructure.db.db_setup import SQLiteSessionMaker
-from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
+from infrastructure.db.repositories.crypto_currency_repository import (
+    CryptoCurrencyRepository,
+)
 
 
 class DeleteTokenWindow(QDialog):
@@ -15,12 +17,12 @@ class DeleteTokenWindow(QDialog):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Удаление токена')
-        self.setWindowIcon(QIcon('resources/icons/warning_picture.png'))
+        self.setWindowTitle("Удаление токена")
+        self.setWindowIcon(QIcon("resources/icons/warning_picture.png"))
 
         pixmap = QPixmap("resources/icons/delete_picture.png").scaled(151, 151)
         self.imageLabel.setPixmap(pixmap)
-        self.msgLabel.setText(f'Вы хотите удалить: {self.token[0]}?')
+        self.msgLabel.setText(f"Вы хотите удалить: {self.token[0]}?")
 
         self.buttonBox.accepted.connect(self.execute)
         self.buttonBox.rejected.connect(self.close)

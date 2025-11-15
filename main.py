@@ -15,7 +15,7 @@ def main() -> None:
 
     app = QApplication(sys.argv)
     ex = MainWindow(session_maker, crypto_getter)
-    with open("resources/styles/main_style.qss", "r") as f:
+    with open("resources/styles/main_style.qss") as f:
         _style = f.read()
         app.setStyleSheet(_style)
     ex.logging()

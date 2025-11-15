@@ -5,7 +5,9 @@ from PyQt6.QtWidgets import QDialog
 
 from application.get_date import get_date
 from infrastructure.db.db_setup import SQLiteSessionMaker
-from infrastructure.db.repositories.crypto_currency_repository import CryptoCurrencyRepository
+from infrastructure.db.repositories.crypto_currency_repository import (
+    CryptoCurrencyRepository,
+)
 
 
 class EditTokenWindow(QDialog):
@@ -19,8 +21,8 @@ class EditTokenWindow(QDialog):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('Редактирование токена')
-        self.setWindowIcon(QIcon('resources/icons/bill_icon.png'))
+        self.setWindowTitle("Редактирование токена")
+        self.setWindowIcon(QIcon("resources/icons/bill_icon.png"))
         self.buttonBox.accepted.connect(self.execute)
         self.buttonBox.rejected.connect(self.close)
 
@@ -35,11 +37,11 @@ class EditTokenWindow(QDialog):
         connection = self.session_maker.create_connection()
         cursor = connection.cursor()
 
-        crypto_currency = {'name': self.token[0],
-                           'buy_price': float(self.priceSpinBox.value()),
-                           'date': str(self.dateEdit.text()),
-                           'amount': float(self.amountBox.value()),
-                           'market': self.marketLine.text()
+        crypto_currency = {"name": self.token[0],
+                           "buy_price": float(self.priceSpinBox.value()),
+                           "date": str(self.dateEdit.text()),
+                           "amount": float(self.amountBox.value()),
+                           "market": self.marketLine.text(),
                            }
 
         CryptoCurrencyRepository(cursor=cursor).edit_currency(crypto_currency)
